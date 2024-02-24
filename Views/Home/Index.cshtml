@@ -1,8 +1,77 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
+    @* this.Url; //UrlHelper *@
+    
+
 }
 <partial name="_AlertMessage"/>
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>
+<p>
+    @* 
+    UrlHelper:
+        lay ra Url truy cap toi Action:
+            Url.Action();
+            Url.ActionLink(); 
+        Sử dụng tên route để phát sinh Url
+            Url.RouteUrl();
+            Url.Link();
+        Địa chỉ Url phát sinh ở trên view
+            <a> <form> <button>
+    *@
+
+    @Url.ActionLink()
+</p>
+<p>
+    @Url.Action()
+</p>
+<p>
+    @Url.Action("Privacy")
+</p>
+<p>
+    @Url.Action("Privacy", new {id=123, name="xuanthulab"})
+</p>
+<p>
+    @*Lấy url tới action của một controller cụ thể*@
+    @Url.Action("Jupiter", "Planet")
+</p>
+<p>
+    @*Lấy url tới action của một controller cụ thể có truyền tham số*@
+    @Url.Action("PlanetInfo", "Planet", new {id=3})
+</p>
+<p>
+    @*Lấy url tới action của một controller cos khai báo Area*@
+    @Url.Action("Index", "Product", new { area = "ProductManage", id=123})
+</p>
+
+<p>
+    @Url.RouteUrl("default", new {action = "HelloView", controller = "Home", id = 123, name = "xuanthulab"})
+</p>
+<p>
+    @Url.RouteUrl("neptune2")
+</p>
+
+<ul>
+    <li>asp-area="Area"</li>
+    <li>asp-action="Action"</li>
+    <li>asp-controller="Product"</li>
+    <li>asp-route...="123"</li>
+    <li>asp-route="default"</li>
+</ul>
+
+@{
+    var routedata = new Dictionary<string, string>(){
+        {"name", "xuanthulab"},
+        {"abc", "XYZ"},
+        {"id", "4"}
+        };
+}
+<a asp-action="Index" asp-controller="Product" asp-area="ProductManage" asp-all-route-data="@routedata">
+     @* asp-route-id="3"
+     asp-route-name="xuanthulab"
+     asp-route-abc="XYZ"> *@
+    Vi Du 1
+</a>
+

@@ -121,6 +121,7 @@ public class FirstController : Controller {
     /*
     cau truc model truyen du lieu giua cac thanh phan cua ung dung
     */
+    [AcceptVerbs("POST", "GET")]
     public IActionResult ViewProduct(int? id) {
         var product = _productService.Where(p => p.Id == id).FirstOrDefault();
         if(product == null) {

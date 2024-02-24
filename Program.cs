@@ -1,6 +1,10 @@
 
+using System.Security.Permissions;
+using Controller_View.ExtendMethods;
 using Controller_View.Service;
+using Controller_View.Services;
 using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.AspNetCore.Routing.Constraints;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
@@ -23,8 +27,7 @@ ProductService
 // builder.Services.AddSingleton<ProductService, ProductService>(); //Cach 2
 // builder.Services.AddSingleton(typeof(ProductService)); //Cach 3
 builder.Services.AddSingleton(typeof(ProductService), typeof(ProductService)); //Cach 
-
-
+builder.Services.AddSingleton<PlanetService>();
 
 var app = builder.Build();
 
@@ -41,15 +44,68 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+// Code Error: 400 - 599
+app.AddStatusCodePage(); // Tuy bien Response loi: 400-599
 
-app.UseRouting();
+app.UseRouting(); // EndpointRoutingMiddleware
 app.UseAuthentication(); // xac dinh danh tinh
 app.UseAuthorization(); // xac thuc quyen truy cap
 
 //URL: /{controller}/{action}/{id?}
-//Ex: Abc/Xys --> He thong se tim Controller co ten Abc va khoi tao --> Goi den phuong thuc Xyz co trong controller do
+// Ex: Abc/Xys --> He thong se tim Controller co ten Abc va khoi tao --> Goi den phuong thuc Xyz co trong controller do
+// app.MapControllerRoute(
+//     name: "default",
+//     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+// Tao cac diem endpoint
+app.MapGet("/sayhi", async (context) => {
+    await context.Response.WriteAsync($"Hello ASP.NET MVC {DateTime.Now}");
+}); 
+
+/*
+Tao cac diem endpoint anh xa URL vao cac controller
+    1. app.MapControllers 
+    --> Cau hinh de tao cac endpoint toi cac controller, sau do cac diem endpoint phai dinh nghia truc tiep trong controller thong
+    qua Atributte.
+    2. app.MapAreaControllerRoute
+    --> Tao cac diem endpoint den cac controller nam trong Area (muc rieng)
+    3. app.MapControllerRoute
+    4. app.MapDefaultControllerRoute
+*/
+//rang buoc cac tham so cua Route phai thoa man dk nao do, Ex:
 app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
-app.MapRazorPages(); // tao ra nhung diem endpoint toi nhung trang Razor
+    name: "first",
+    pattern: "{url:regex(^((xemsanpham)|(viewproduct))$)}/{id:range(2,4)}",
+    defaults: new {
+        controller = "First",
+        action = "ViewProduct"
+    }
+    // constraints: new {
+    //     // url = new StringRouteConstraint("xemsanpham")
+    //     url = "xemsanpham",
+    //     id = new RangeRouteConstraint(2,4)
+    // }
+);
+
+// MapAreaControllerRoute de anh xa Url toi cac Controller có khai báo Area
+// MapAreaControllerRoute phai nam trc MapController default
+app.MapAreaControllerRoute(
+    name: "product",
+    pattern: "/{controller}/{action=Index}/{id?}",
+    areaName: "ProductManage"
+);
+
+// URL: /start-here
+app.MapControllerRoute(
+    name: "default", // routename
+    pattern: "/{controller=Home}/{action=Index}/{id?}"
+    // chua cac tham so mac dinh cua route, la doi tuong kieu vo danh
+    // defaults: new {
+    //     controller = "First",
+    //     action = "ViewProduct",
+    //     id = 3
+    // }
+);
+//Tao cac diem endpoint de co the truy cap den trang Razor page neu co
+app.MapRazorPages();
 app.Run();
