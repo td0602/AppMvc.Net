@@ -52,3 +52,9 @@ asp-controller="Product"
 asp-route...="123"
 asp-route="default"
 ```
+
+## Connect DB
+- Thêm các thư viện cần thiết
+- Cấu hình kết nối tới database trong CSDL
+- Tạo file AppDbContext.cs
+- Đăng ký dịch vụ cho DbContext

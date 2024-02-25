@@ -1,12 +1,15 @@
 
 using System.Security.Permissions;
 using Controller_View.ExtendMethods;
+using Controller_View.Models;
 using Controller_View.Service;
 using Controller_View.Services;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Routing.Constraints;
 
 var builder = WebApplication.CreateBuilder(args);
+// đăng ký dịch vụ cho AppDbContext
+builder.Services.AddDbContext<AppDbContext>();
 // Add services to the container.
 builder.Services.AddControllersWithViews(); // dang ky dich vu mo hinh MVC
 builder.Services.AddRazorPages(); // dang ky cac dich vu lien quan den trang Razor
