@@ -1,3 +1,4 @@
+using Controller_View.Models.Contacts;
 using Microsoft.EntityFrameworkCore;
 
 namespace Controller_View.Models 
@@ -31,5 +32,8 @@ namespace Controller_View.Models
             // }
 
         }
+        // Khai báo có Property là Contact --> Tương ứng với bảng Contact trong CSDL
+        public DbSet<Contact> Contacts {get; set;}
+
     }
 }
